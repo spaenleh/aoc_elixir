@@ -20,7 +20,7 @@ defmodule AocElixir.MixProject do
 
   def cli do
     [
-      prefferd_envs: ["aoc.test": :test]
+      preferred_envs: ["aoc.test": :test]
     ]
   end
 
