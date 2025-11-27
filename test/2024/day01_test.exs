@@ -14,14 +14,15 @@ defmodule AocElixir.Solutions.Y24.Day01Test do
 
   test "part one example" do
     input = ~S"""
-    This is an
-    example input.
-    replace with
-    an example from
-    the AoC website.
+    3   4
+    4   3
+    2   5
+    1   3
+    3   9
+    3   3
     """
 
-    assert CHANGE_ME == solve(input, :part_one)
+    assert 11 == solve(input, :part_one)
   end
 
   # @part_one_solution CHANGE_ME
