@@ -26,6 +26,7 @@ defmodule AocElixir.Solutions.Y24.Day01Test do
   end
 
   @part_one_solution 936_063
+  @tag :solution
   test "part one solution" do
     assert {:ok, @part_one_solution} == AoC.run(2024, 1, :part_one)
   end
@@ -44,6 +45,7 @@ defmodule AocElixir.Solutions.Y24.Day01Test do
   end
 
   @part_two_solution 23_150_395
+  @tag :solution
   test "part two solution" do
     assert {:ok, @part_two_solution} == AoC.run(2024, 1, :part_two)
   end

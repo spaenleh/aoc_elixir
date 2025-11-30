@@ -85,9 +85,10 @@ jobs:
       - name: Check Formatting
         run: mix format --check-formatted
 
-      # Step: Execute the tests.
+      # Step: Execute the tests
+      # We do not want to execute the solutions tests
       - name: Run tests
-        run: mix test
+        run: mix test --exclude solution
 
       - name: Clean
         run: mix clean
