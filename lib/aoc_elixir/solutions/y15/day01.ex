@@ -4,6 +4,7 @@ defmodule AocElixir.Solutions.Y15.Day01 do
   def parse(input, _part) do
     Input.read!(input)
     |> String.split("")
+    |> Enum.reject(fn el -> el == "" end)
   end
 
   def part_one(problem) do
@@ -14,7 +15,23 @@ defmodule AocElixir.Solutions.Y15.Day01 do
     end)
   end
 
-  # def part_two(problem) do
-  #   problem
-  # end
+  def part_two(problem) do
+    Enum.reduce_while(problem, {0, 0}, fn op, {level, index} ->
+      level =
+        if op == "(" do
+          level + 1
+        else
+          level - 1
+        end
+
+      if level == -1 do
+        {:halt, index + 1}
+      else
+        {
+          :cont,
+          {level, index + 1}
+        }
+      end
+    end)
+  end
 end
