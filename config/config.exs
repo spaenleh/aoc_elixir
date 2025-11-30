@@ -7,4 +7,4 @@ config :aoc,
   # Optional
 
   # Include help comments when generating modules and tests
-  generate_comments: true
+  generate_comments: false
