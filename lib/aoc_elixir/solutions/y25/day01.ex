@@ -36,11 +36,6 @@ defmodule AocElixir.Solutions.Y25.Day01 do
   def part_two(problem) do
     problem
     |> Enum.reduce(%{zero: 0, pos: 50}, fn value, acc ->
-      IO.puts("----\npos: #{acc.pos}\nvalue: #{value}\nzeros: #{acc.zero}")
-
-      new_pos =
-        Integer.mod(acc.pos + value, 100)
-
       # is the value a complement to the current pos -> we end on zero
       value_rem = rem(value, 100)
       pos_complement = acc.pos + value_rem
@@ -51,12 +46,10 @@ defmodule AocElixir.Solutions.Y25.Day01 do
         else
           0
         end
-        |> IO.inspect(label: "is complement")
 
       # this is the number of full turns that it can make
       full_turns =
         div(abs(value), 100)
-        |> IO.inspect(label: "full turns")
 
       # if we end up on the mark we need to count one turn less
       rectified_full_turns =
@@ -65,7 +58,6 @@ defmodule AocElixir.Solutions.Y25.Day01 do
         else
           full_turns
         end
-        |> IO.inspect(label: "rectified turns")
 
       is_crossing =
         if (acc.pos > 0 and pos_complement < 0) or pos_complement > 100 do
@@ -73,9 +65,11 @@ defmodule AocElixir.Solutions.Y25.Day01 do
         else
           0
         end
-        |> IO.inspect(label: "is crossing")
 
       num_zero = acc.zero + rectified_full_turns + is_complement + is_crossing
+
+      new_pos =
+        Integer.mod(acc.pos + value, 100)
 
       %{pos: new_pos, zero: num_zero}
     end)
