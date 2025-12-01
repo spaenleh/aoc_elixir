@@ -152,8 +152,10 @@ defmodule AocElixir.Solutions.Y25.Day01Test do
                """,
                :part_two
              )
+  end
 
-    assert 4 ==
+  test "part two other case" do
+    assert 5 ==
              solve(
                ~S"""
                R151
@@ -167,10 +169,10 @@ defmodule AocElixir.Solutions.Y25.Day01Test do
   # 59xx too high
   # 5767 too low
   # 5869 not correct
-  #
-  # @part_two_solution CHANGE_ME
-  #
-  # test "part two solution" do
-  #   assert {:ok, @part_two_solution} == AoC.run(2025, 1, :part_two)
-  # end
+
+  @part_two_solution 5887
+  @tag :solution
+  test "part two solution" do
+    assert {:ok, @part_two_solution} == AoC.run(2025, 1, :part_two)
+  end
 end

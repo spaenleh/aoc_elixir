@@ -36,65 +36,47 @@ defmodule AocElixir.Solutions.Y25.Day01 do
   def part_two(problem) do
     problem
     |> Enum.reduce(%{zero: 0, pos: 50}, fn value, acc ->
-      # IO.puts("---\npos: #{acc.pos}, value: #{value}")
+      IO.puts("----\npos: #{acc.pos}\nvalue: #{value}\nzeros: #{acc.zero}")
 
       new_pos =
         Integer.mod(acc.pos + value, 100)
 
-      # this is the number of full turns that it can make
-      full_turns = div(abs(value), 100)
-      # |> IO.inspect(label: "will_turn")
       # is the value a complement to the current pos -> we end on zero
       value_rem = rem(value, 100)
       pos_complement = acc.pos + value_rem
 
       is_complement =
-        if acc.pos != 0 and (pos_complement == 0 or pos_complement == 100) do
+        if pos_complement == 0 or pos_complement == 100 do
           1
         else
           0
         end
+        |> IO.inspect(label: "is complement")
 
-      num_zero = acc.zero + full_turns + is_complement
-      IO.puts(num_zero)
+      # this is the number of full turns that it can make
+      full_turns =
+        div(abs(value), 100)
+        |> IO.inspect(label: "full turns")
 
-      # num_zero = acc.zero
-      # check if stopped on 0
-      # num_zero =
-      #   if new_pos == 0 do
-      #     # IO.puts("Stops on 0")
-      #     acc.zero + 1
-      #   else
-      #     acc.zero
-      #   end
+      # if we end up on the mark we need to count one turn less
+      rectified_full_turns =
+        if acc.pos == 0 and is_complement == 1 and full_turns > 0 do
+          full_turns - 1
+        else
+          full_turns
+        end
+        |> IO.inspect(label: "rectified turns")
 
-      # if the value is negative, we crossed 0
-      # num_zero =
-      #   if acc.pos > 0 and acc.pos + value < 0 do
-      #     # IO.puts("goes past zero from + to -")
-      #     x_times = abs(div(value, 100)) + 1
-      #     # IO.puts("for #{x_times} times")
-      #     num_zero + x_times
-      #   else
-      #     num_zero
-      #   end
-      #
-      # num_zero =
-      #   if acc.pos != 0 and acc.pos + value > 100 do
-      #     num_zero + 1 + div(value, 100)
-      #   else
-      #     num_zero
-      #   end
-      #
-      # # special case for when we are on zero, we do not want to count more than needed
-      # num_zero =
-      #   if acc.pos == 0 do
-      #     num_zero + abs(div(value, 100)) + 1
-      #   else
-      #     num_zero
-      #   end
+      is_crossing =
+        if (acc.pos > 0 and pos_complement < 0) or pos_complement > 100 do
+          1
+        else
+          0
+        end
+        |> IO.inspect(label: "is crossing")
 
-      # IO.puts("num_zero: #{num_zero}")
+      num_zero = acc.zero + rectified_full_turns + is_complement + is_crossing
+
       %{pos: new_pos, zero: num_zero}
     end)
     |> then(fn %{zero: num_zero} -> num_zero end)
