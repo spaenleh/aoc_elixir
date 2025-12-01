@@ -51,7 +51,7 @@ defmodule AocElixir.Solutions.Y25.Day01 do
       full_turns =
         div(abs(value), 100)
 
-      # if we end up on the mark we need to count one turn less
+      # if we start on zero and finish on zero, we need to take one out of the turns (if there are at least one) 
       rectified_full_turns =
         if acc.pos == 0 and is_complement == 1 and full_turns > 0 do
           full_turns - 1

@@ -10,6 +10,22 @@ This year (2025) I will attempt to solve the puzzles in Elixir.
 
 ### 2025 Day 01
 
+For the first puzzle this year, it looked simple enough. But there were some hurdles on the way.
+
+First hurdle is the behaviour of the `rem/2` function. It returns a negative result when provided a negative input. So the remainder of -125 over 100 is -25
+which is correct but not always what you want. Instead I used `Integer.mod/2` which return `75` for the same `-125 mod 100` computation.
+
+This was enough to solve part 1.
+
+Then began the fun of part 2 or, should I say the dread ... In this part we need to count how many times it "clicks" on zero, meaning if it passes zero but does not stop there it also counts.
+For this I divided the work into checking if:
+
+- it lands on zero by being a complement to the number
+- it passes zero in one direction or the other
+- count how many times it can pass zero given that it makes full turns
+
+The issue is that we need to account for the specific cases where it starts at zero and makes exactly N full turns, where we need to remove one from the turns because it will already be accounted in the complement computation.
+
 ## 2024
 
 ### 2024 Day 01
