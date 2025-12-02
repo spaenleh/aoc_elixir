@@ -32,7 +32,7 @@ defmodule AocElixir.Solutions.Y25.Day02 do
             start_string = String.slice("#{id_string}", 0..(mid - 1))
             end_string = String.slice("#{id_string}", mid..-1//1)
 
-            !start_string == end_string
+            !(start_string == end_string)
         end
       end)
     end)
