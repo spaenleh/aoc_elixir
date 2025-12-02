@@ -26,6 +26,27 @@ For this I divided the work into checking if:
 
 The issue is that we need to account for the specific cases where it starts at zero and makes exactly N full turns, where we need to remove one from the turns because it will already be accounted in the complement computation.
 
+### 2025 Day 02
+
+This is where ranges came at us again.
+In this puzzle we need to find numbers that are of the pattern `blockblock` where they repeat the same numbers twice.
+
+For this to happen:
+
+- number must have an even number of chars, odd number of chars can not be symmetrical
+- take first half of the number and check if it matches second half
+
+What could also work is to check the divisibility by `10^n + 1` where the digit has length 2n.
+
+But before doing a bunch of computations we need to ensure that we are able to reduce the problem space.
+
+We can do two things:
+
+- de-duplicate the ranges so we do not compute the same things multiple times
+- remove ranges that have strictly odd length numbers
+
+Before doing this optimization: 1.83s for part 1
+
 ## 2024
 
 ### 2024 Day 01

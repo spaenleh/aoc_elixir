@@ -1,47 +1,50 @@
 defmodule AocElixir.Solutions.Y25.Day02 do
   alias AoC.Input
 
+  def parse_ranges(range) do
+    [ls, rs] = String.split(range, "-")
+    String.to_integer(ls)..String.to_integer(rs)
+  end
+
   def parse(input, _part) do
     Input.read!(input)
     |> String.trim()
     |> String.split(",")
+    |> Enum.map(&parse_ranges/1)
   end
 
   def part_one(problem) do
     problem
-    |> Enum.map(&String.split(&1, "-"))
-    # |> IO.inspect()
-    |> Enum.map(fn [start_val, end_val] ->
-      String.to_integer(start_val)..String.to_integer(end_val)
-      |> Enum.reject(fn id ->
-        # ID that is even can not be fake
-        id_string = Integer.to_charlist(id)
-        id_length = length(id_string)
-        # IO.puts("#{id_length}, #{mid}, #{start_string}, #{end_string}")
-
-        case id do
-          _ when id < 11 ->
-            true
-
-          _ when rem(id_length, 2) != 0 ->
-            # IO.puts("odd size")
-            true
-
-          _ ->
-            mid = div(id_length, 2)
-            start_string = String.slice("#{id_string}", 0..(mid - 1))
-            end_string = String.slice("#{id_string}", mid..-1//1)
-
-            !(start_string == end_string)
-        end
-      end)
+    # compute in parallel each range
+    |> Task.async_stream(fn seq ->
+      # inside the range, remove ids that are invalid
+      Enum.filter(seq, &invalid?/1)
     end)
-    |> Enum.flat_map(& &1)
-    # |> Enum.map(&IO.inspect(&1))
+    # get the results, we need to extract the value from the result
+    |> Enum.flat_map(fn {:ok, inv} -> inv end)
+    # sum all invalid ids
     |> Enum.sum()
   end
 
   # def part_two(problem) do
   #   problem
   # end
+  #
+
+  @doc """
+  Checks of the given identifier is considered invalid.
+
+  An identifier is invalid when it can be represented by `blockblock` i.e. twice repeated sequence of numbers
+  """
+  def invalid?(id) do
+    id_string = Integer.to_string(id)
+    id_length = String.length(id_string)
+
+    if Bitwise.band(id_length, 1) == 1 do
+      false
+    else
+      {s1, s2} = String.split_at(id_string, div(id_length, 2))
+      s1 == s2
+    end
+  end
 end
