@@ -34,9 +34,9 @@ defmodule AocElixir.Solutions.Y25.Day02Test do
     assert 4_174_379_265 == solve(input, :part_two)
   end
 
-  # @part_two_solution CHANGE_ME
-  #
-  # test "part two solution" do
-  #   assert {:ok, @part_two_solution} == AoC.run(2025, 2, :part_two)
-  # end
+  @part_two_solution 31_898_925_685
+  @tag :solution
+  test "part two solution" do
+    assert {:ok, @part_two_solution} == AoC.run(2025, 2, :part_two)
+  end
 end
