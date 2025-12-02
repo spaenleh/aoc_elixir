@@ -26,10 +26,12 @@ defmodule AocElixir.Solutions.Y25.Day02 do
     |> Enum.sum()
   end
 
-  # def part_two(problem) do
-  #   problem
-  # end
-  #
+  def part_two(problem) do
+    problem
+    |> Task.async_stream(fn seq -> Enum.filter(seq, &very_invalid?/1) end)
+    |> Enum.flat_map(fn {:ok, inv} -> inv end)
+    |> Enum.sum()
+  end
 
   @doc """
   Checks of the given identifier is considered invalid.
@@ -45,6 +47,36 @@ defmodule AocElixir.Solutions.Y25.Day02 do
     else
       {s1, s2} = String.split_at(id_string, div(id_length, 2))
       s1 == s2
+    end
+  end
+
+  def chunk_number_string(num_str, size)
+      when is_binary(num_str) and is_integer(size) and size > 0 do
+    num_str
+    |> String.graphemes()
+    |> Enum.chunk_every(size)
+    |> Enum.map(&Enum.join/1)
+  end
+
+  def very_invalid?(id) do
+    id_string = Integer.to_string(id)
+    id_length = String.length(id_string)
+    mid = div(id_length, 2)
+
+    if mid >= 1 do
+      Enum.reduce_while(1..mid, false, fn size, _ ->
+        chunks = chunk_number_string(id_string, size)
+
+        case Enum.uniq(chunks) do
+          [_] ->
+            {:halt, true}
+
+          _ ->
+            {:cont, false}
+        end
+      end)
+    else
+      false
     end
   end
 end
