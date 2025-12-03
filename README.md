@@ -1,4 +1,4 @@
-# Advent of code in Elixir
+# 🎄 Advent of code in Elixir 💧
 
 This is my solutions for advent of code in Elixir
 
