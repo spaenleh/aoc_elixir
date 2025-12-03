@@ -14,8 +14,12 @@ defmodule AocElixir.Solutions.Y25.Day03 do
 
   def part_two(problem) do
     problem
-    |> Enum.map(&find_joltage(&1, 12))
-    |> Enum.sum()
+    |> Task.async_stream(&find_joltage(&1, 12))
+    |> Enum.sum_by(fn {:ok, v} -> v end)
+
+    # solution without parallel processing of the lines
+    # |> Enum.map(&find_joltage(&1, 12))
+    # |> Enum.sum()
   end
 
   def find_joltage(batteries, size) do
@@ -27,6 +31,7 @@ defmodule AocElixir.Solutions.Y25.Day03 do
       range =
         start_index..(length(batteries) - size + term_index - 1)//1
 
+      # find maximum based on the value, we cary the index for later
       {digit, index} =
         Enum.max_by(
           Enum.with_index(Enum.slice(batteries, range)),
@@ -36,7 +41,12 @@ defmodule AocElixir.Solutions.Y25.Day03 do
         )
 
       # the final index is relative to the truncated range we used, so we need to add the start_index
-      {start_index + index + 1, [digit | joltage_digits]}
+      next_index = start_index + index + 1
+
+      # concatenate the digit in the joltage (! revered list !)
+      next_digits = [digit | joltage_digits]
+
+      {next_index, next_digits}
     end)
     # the result is a 2-tuple with {last_index, joltage_digits}, we take only the digits
     |> elem(1)
