@@ -47,6 +47,32 @@ We can do two things:
 
 Before doing this optimization: 1.83s for part 1
 
+### 2025 Day 03
+
+Haha, this is a classic !
+In this puzzle we need to find a 2-digit value from a longer sting that maximizes the value.
+Very simple at first, let me just get all the ordered pairs for the input string an find the highest one !
+Indeed that works.
+
+If you have `[1, 4, 5]` you would generate `[[1, 4], [1, 5], [4, 5]]` and then get `45` as the highest value.
+
+On my machine, on the input given this runs in about 200ms (not too shaby!).
+
+But then... Oh my, part 2 asks to find the 12-digit value that maximizes the joltage ... And you just think "I am sooo f?!\*ed".
+
+This is where good friends come in.
+This solution has been proposed by my lovely girlfriend, props to her.
+
+So what you do is you take your long digit array. For the first digit you search through the 0..-2 range of you digits:
+`[1, 2, 3, 4]` -> search through `[1, 2, 3]`
+Get the highest one. In this case it is `3`. Keep the index it came from, as this will now reduce your search range.
+Start again, this time, start after the last index (`2+1` -> `3`) and go up to the end (actually it should be `total_digits - step - 1` -> 0 in our case)
+We take the max, in our case only one choice: `4` and we end up with `34` as the result.
+
+Other examples:
+
+- `88395361` -> `96`
+
 ## 2024
 
 ### 2024 Day 01
