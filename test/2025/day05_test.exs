@@ -70,7 +70,7 @@ defmodule AocElixir.Solutions.Y25.Day05Test do
 
   # 327327831946291 -> too low
   @part_two_solution 338_258_295_736_104
-
+  @tag :solution
   test "part two solution" do
     assert {:ok, @part_two_solution} == AoC.run(2025, 5, :part_two)
   end
