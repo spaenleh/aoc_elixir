@@ -35,7 +35,7 @@ defmodule AocElixir.Grid do
         r = row + dr,
         c = col + dc,
         at(grid, r, c) == value,
-        do: {r, c}
+        do: {c, r}
   end
 
   def at(_grid, row, col) when row < 0 or col < 0, do: nil
@@ -54,5 +54,32 @@ defmodule AocElixir.Grid do
         {cell, c} <- Enum.with_index(row),
         cell == char,
         do: {r, c}
+  end
+
+  def update(grid, {x, y}, value) do
+    put_in(grid, [Access.at(y), Access.at(x)], value)
+  end
+
+  def from_adjacency(graph, marker, opts \\ []) do
+    # get all the coords from the graph
+    coords = Map.keys(graph) |> IO.inspect()
+    x_max = coords |> Enum.map(&elem(&1, 0)) |> Enum.max()
+    y_max = coords |> Enum.map(&elem(&1, 1)) |> Enum.max()
+
+    empty_value = Keyword.get(opts, :bg, ".")
+    width = Keyword.get(opts, :width, x_max)
+    height = Keyword.get(opts, :height, y_max)
+
+    0..height
+    |> Enum.map(fn y ->
+      0..width
+      |> Enum.map(fn x ->
+        if Enum.member?(coords, {x, y}) do
+          marker
+        else
+          empty_value
+        end
+      end)
+    end)
   end
 end
