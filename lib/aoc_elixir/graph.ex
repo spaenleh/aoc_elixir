@@ -6,7 +6,6 @@ defmodule AocElixir.Graph do
   def delete(graph, node) do
     neigh =
       get(graph, node)
-      |> IO.inspect(label: "neighs")
 
     graph =
       case neigh do

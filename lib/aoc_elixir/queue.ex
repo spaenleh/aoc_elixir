@@ -23,7 +23,15 @@ defmodule AocElixir.Queue do
   @doc "Enqueue an item, returns the new queue"
   @spec enqueue(t(), any()) :: t()
   def enqueue(%{in: i, out: o} = _q, item) do
+    # do not enqueue if item is already inside the queue
+    # IO.inspect(o ++ i, label: "queue")
+    # IO.inspect(item, label: "adding item")
+
+    # if not Enum.member?(i, item) and not Enum.member?(o, item) do
     %{in: [item | i], out: o}
+    # else
+    # %{in: i, out: o}
+    # end
   end
 
   @doc """

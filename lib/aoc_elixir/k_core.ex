@@ -6,23 +6,23 @@ defmodule AocElixir.KCore do
   alias AocElixir.Grid
   alias AocElixir.Graph
   alias AocElixir.Queue
-
-  @doc """
-  Returns the adjacency list of the nodes in the grid.
-
-  ## Example
-    iex> adjacency_list([[".", "@"],
-                         ["@", "@"],
-                         [".", "."]], "@")
-
-  """
-  def adjacency_list(grid, value) do
-    for {row, r} <- Enum.with_index(grid),
-        {_col, c} <- Enum.with_index(row),
-        Grid.at(grid, r, c) == value,
-        into: %{},
-        do: {{c, r}, MapSet.new(Grid.neighbors_coord_where(grid, r, c, value))}
-  end
+  #
+  # @doc """
+  # Returns the adjacency list of the nodes in the grid.
+  #
+  # ## Example
+  #   iex> adjacency_list([[".", "@"],
+  #                        ["@", "@"],
+  #                        [".", "."]], "@")
+  #
+  # """
+  # def adjacency_list(grid, value) do
+  #   for {row, r} <- Enum.with_index(grid),
+  #       {_col, c} <- Enum.with_index(row),
+  #       Grid.at(grid, r, c) == value,
+  #       into: %{},
+  #       do: {{c, r}, %{neighbours: MapSet.new(Grid.neighbors_coord_where(grid, r, c, value))}
+  # end
 
   @doc """
   This function takes a Grid and perform the k-core algo on it.
@@ -37,7 +37,7 @@ defmodule AocElixir.KCore do
     k =
       get_k_from_options(opts)
 
-    graph = adjacency_list(grid, "@")
+    graph = Grid.to_graph(grid, "@")
 
     dying_cells =
       graph
@@ -51,7 +51,6 @@ defmodule AocElixir.KCore do
     case length(dying_cells) do
       # nothing to remove, we are done
       0 ->
-        Grid.display(grid)
         map_size(graph)
 
       # we remove the coords that are less than 3 degrees  
@@ -77,30 +76,27 @@ defmodule AocElixir.KCore do
   """
   def reduce(graph, opts \\ []) do
     k = get_k_from_options(opts)
+    IO.inspect(graph)
 
-    initial_queue =
+    {queue, graph} =
       update_queue(Queue.new(), graph, k)
 
-    graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(initial_queue))
+    # graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(initial_queue))
 
-    perform_reduction(graph, initial_queue, k, 0)
+    perform_reduction(graph, queue, k, 0)
   end
 
   defp perform_reduction(graph, queue, k, iter) do
     case Queue.dequeue(queue) do
       {:ok, node, queue} ->
         graph = graph |> Graph.delete(node)
-        queue = queue |> update_queue(graph, k)
+        {queue, graph} = update_queue(queue, graph, k)
 
-        IO.puts("- Graph state -")
-        graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(queue))
-        IO.puts("\n")
+        # IO.puts("- Graph state -")
+        # graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(queue))
+        # IO.puts("\n")
 
-        if iter < 10 do
-          perform_reduction(graph, queue, k, iter + 1)
-        else
-          graph
-        end
+        perform_reduction(graph, queue, k, iter + 1)
 
       :empty ->
         graph
@@ -109,14 +105,16 @@ defmodule AocElixir.KCore do
 
   defp update_queue(queue, graph, k) do
     graph
-    |> Enum.reduce(queue, fn
-      {node, neighbours}, q ->
-        if MapSet.size(neighbours) < k do
-          Queue.enqueue(q, node)
+    |> Enum.reduce({queue, graph}, fn
+      {node, %{neighbours: neighbours, in_queue: in_queue}}, q ->
+        if MapSet.size(neighbours) < k and not in_queue do
+          {Queue.enqueue(q, node),
+           Map.put(graph, node, %{neighbours: neighbours, in_queue: true})}
         else
-          q
+          {q, graph}
         end
     end)
+    |> IO.inspect()
   end
 
   defp get_k_from_options(opts) do

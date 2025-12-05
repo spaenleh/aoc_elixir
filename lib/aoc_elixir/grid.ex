@@ -30,9 +30,7 @@ defmodule AocElixir.Grid do
 
   def neighbors(grid, row, col) when is_list(grid) and is_integer(row) and is_integer(col) do
     Enum.map(@neighbours_offsets, fn {dr, dc} ->
-      r =
-        row + dr
-
+      r = row + dr
       c = col + dc
       at(grid, r, c)
     end)
@@ -98,7 +96,10 @@ defmodule AocElixir.Grid do
         {_col, c} <- Enum.with_index(row),
         at(grid, r, c) == marker,
         into: %{},
-        do: {{c, r}, MapSet.new(neighbors_coord_where(grid, r, c, marker))}
+        do: {
+          {c, r},
+          MapSet.new(neighbors_coord_where(grid, r, c, marker))
+        }
   end
 
   def new(string) when is_binary(string) do
