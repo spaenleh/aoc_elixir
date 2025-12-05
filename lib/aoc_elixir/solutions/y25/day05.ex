@@ -65,13 +65,13 @@ defmodule AocElixir.Solutions.Y25.Day05 do
         true -> false
       end
     end)
-    |> Enum.scan({{0, 0}, 0}, fn {lha, rha}, {{lhb, rhb}, _acc} ->
+    |> Enum.scan({0, 0}, fn {low, high}, {max_seen, _v} ->
       cond do
         # new lower bound is strictly bigger than previous higer bound
-        lha > rhb -> {{lha, rha}, rha - lha + 1}
-        lha <= rhb and rha >= rhb -> {{rhb + 1, rha}, rha - rhb}
+        low > max_seen -> {high, high - low + 1}
+        low <= max_seen and high >= max_seen -> {high, high - max_seen}
         # both are smaller, the range is null
-        true -> {{lhb, rhb}, 0}
+        true -> {max_seen, 0}
       end
     end)
     |> Enum.map(&elem(&1, 1))
