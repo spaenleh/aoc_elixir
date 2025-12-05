@@ -1,4 +1,5 @@
 defmodule AocElixir.Solutions.Y25.Day04 do
+  alias AocElixir.KCore
   alias AocElixir.Grid
   alias AoC.Input
 
@@ -36,6 +37,18 @@ defmodule AocElixir.Solutions.Y25.Day04 do
   end
 
   def part_two(problem) do
-    problem
+    initial_nodes = problem |> KCore.adjacency_list("@") |> map_size()
+
+    final_nodes =
+      problem
+      |> KCore.perform()
+
+    initial_nodes - final_nodes
+    # |> KCore.adjacency_list("@")
+    # |> KCore.reduce_to(k: 4)
+    # |> Grid.from_adjacency("@", width: 9, height: 9)
+    # |> Grid.display()
+
+    # |> map_size()
   end
 end
