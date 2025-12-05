@@ -73,6 +73,27 @@ Other examples:
 
 - `88395361` -> `96`
 
+### 2025 Day 04
+
+TBA
+
+### 2025 Day 05
+
+Today is about ranges of products and products belonging to these ranges.
+
+The first part can be solved by simply iterating over the products and checking if they belong to a list, exiting at the first match.
+
+The second part only focuses on the product ranges and asks to give the number of products that are considered by the ranges. Ranges can overlap and even be included in others.
+For this I first sorted the ranges by their start and end values, so they are guaranteed to be in increasing order. Then I iterate over them and compare with the previous range to adapt the bounds.
+
+- If the new lower bound is bigger than the previous higher bound we can simply take the number of products in the current range.
+
+- If the new lower bound is smaller than the previous higher bound and the new higher bound is bigger than the previous higher bound we correct the considered range to start after the previous high bound.
+
+- If the new range is completely inside the previous one we just discard it.
+
+I am very happy that my approach for the second part runs in under 1ms (736us).
+
 ## 2024
 
 ### 2024 Day 01

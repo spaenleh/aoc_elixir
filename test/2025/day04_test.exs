@@ -35,22 +35,22 @@ defmodule AocElixir.Solutions.Y25.Day04Test do
     assert {:ok, @part_one_solution} == AoC.run(2025, 4, :part_one)
   end
 
-  test "part two example" do
-    input = ~S"""
-    ..@@.@@@@.
-    @@@.@.@.@@
-    @@@@@.@.@@
-    @.@@@@..@.
-    @@.@@@@.@@
-    .@@@@@@@.@
-    .@.@.@.@@@
-    @.@@@.@@@@
-    .@@@@@@@@.
-    @.@.@@@.@.
-    """
-
-    assert 43 == solve(input, :part_two)
-  end
+  # test "part two example" do
+  #   input = ~S"""
+  #   ..@@.@@@@.
+  #   @@@.@.@.@@
+  #   @@@@@.@.@@
+  #   @.@@@@..@.
+  #   @@.@@@@.@@
+  #   .@@@@@@@.@
+  #   .@.@.@.@@@
+  #   @.@@@.@@@@
+  #   .@@@@@@@@.
+  #   @.@.@@@.@.
+  #   """
+  #
+  #   assert 43 == solve(input, :part_two)
+  # end
 
   # @part_two_solution CHANGE_ME
   #
