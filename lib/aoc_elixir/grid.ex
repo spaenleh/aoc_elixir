@@ -9,12 +9,22 @@ defmodule AocElixir.Grid do
     {1, 0},
     {1, 1}
   ]
-  def display(grid) do
+
+  def display(grid, highlight \\ []) do
     grid
-    |> Enum.map(fn line ->
-      Enum.join(line, "")
+    |> Enum.with_index()
+    |> Enum.map_join("\n", fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map_join("", fn
+        {elem, x} ->
+          if Enum.member?(highlight, {x, y}) do
+            IO.ANSI.red() <> elem <> IO.ANSI.reset()
+          else
+            elem
+          end
+      end)
     end)
-    |> Enum.join("\n")
     |> IO.puts()
   end
 
@@ -60,9 +70,9 @@ defmodule AocElixir.Grid do
     put_in(grid, [Access.at(y), Access.at(x)], value)
   end
 
-  def from_adjacency(graph, marker, opts \\ []) do
+  def from_graph(graph, marker, opts \\ []) do
     # get all the coords from the graph
-    coords = Map.keys(graph) |> IO.inspect()
+    coords = Map.keys(graph)
     x_max = coords |> Enum.map(&elem(&1, 0)) |> Enum.max()
     y_max = coords |> Enum.map(&elem(&1, 1)) |> Enum.max()
 
@@ -81,5 +91,30 @@ defmodule AocElixir.Grid do
         end
       end)
     end)
+  end
+
+  def to_graph(grid, marker) when is_list(grid) and is_binary(marker) do
+    for {row, r} <- Enum.with_index(grid),
+        {_col, c} <- Enum.with_index(row),
+        at(grid, r, c) == marker,
+        into: %{},
+        do: {{c, r}, MapSet.new(neighbors_coord_where(grid, r, c, marker))}
+  end
+
+  def new(string) when is_binary(string) do
+    string
+    |> String.split("\n")
+    |> Enum.map(fn line ->
+      line
+      |> String.trim()
+      |> String.split("")
+      |> Enum.filter(fn char ->
+        case char do
+          "" -> false
+          _ -> true
+        end
+      end)
+    end)
+    |> Enum.reject(&([] == &1))
   end
 end

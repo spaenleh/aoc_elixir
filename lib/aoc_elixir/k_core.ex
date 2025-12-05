@@ -4,6 +4,8 @@ defmodule AocElixir.KCore do
   """
 
   alias AocElixir.Grid
+  alias AocElixir.Graph
+  alias AocElixir.Queue
 
   @doc """
   Returns the adjacency list of the nodes in the grid.
@@ -22,29 +24,34 @@ defmodule AocElixir.KCore do
         do: {{c, r}, MapSet.new(Grid.neighbors_coord_where(grid, r, c, value))}
   end
 
-  def perform(grid) do
-    k = 4
+  @doc """
+  This function takes a Grid and perform the k-core algo on it.
+
+  K can be sepcified as an option.
+
+  It uses the iterative approache where  it gets all nodes
+  that have a degree less than k and removes them from the grid,
+  then it re-computes the graph to remove the next nodes.
+  """
+  def perform(grid, opts \\ []) do
+    k =
+      get_k_from_options(opts)
+
     graph = adjacency_list(grid, "@")
 
     dying_cells =
       graph
       |> Enum.filter(fn {_node, neighbours} ->
-        # node |> IO.inspect(label: "node")
-
         degree =
           MapSet.size(neighbours)
-
-        # |> IO.inspect(label: "degree")
 
         degree < k
       end)
 
-    # |> IO.inspect()
-
     case length(dying_cells) do
       # nothing to remove, we are done
       0 ->
-        # Grid.display(grid)
+        Grid.display(grid)
         map_size(graph)
 
       # we remove the coords that are less than 3 degrees  
@@ -55,85 +62,64 @@ defmodule AocElixir.KCore do
           Grid.update(g, coord, ".")
         end)
         # call recursively
-        |> perform()
+        |> perform(k: k)
     end
   end
 
-  def reduce_to(graph, opts) do
-    k = Keyword.get(opts, :k, 4)
+  @doc """
+  Performs the k-core algo only on the graph.
+
+  It uses a FIFO queue to process nodes and adds nodes that fall
+  short on the degree to the queue.
+
+  Once the queue is done processing, we have our k-core nodes.
+
+  """
+  def reduce(graph, opts \\ []) do
+    k = get_k_from_options(opts)
 
     initial_queue =
-      graph
-      |> Enum.reduce(:queue.new(), fn
-        {node, neighbours}, q ->
-          # IO.inspect(%{node: node, degree: MapSet.size(neighbours)}, label: "")
+      update_queue(Queue.new(), graph, k)
 
-          if MapSet.size(neighbours) < k do
-            :queue.in(node, q)
-          else
-            q
-          end
-      end)
-      |> IO.inspect(label: "initial queue")
+    graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(initial_queue))
 
-    perform_reduction(graph, initial_queue, k)
+    perform_reduction(graph, initial_queue, k, 0)
   end
 
-  defp perform_reduction(step_graph, input_q, k) do
-    case :queue.out(input_q) do
-      {{:value, value}, res_q} ->
-        value |> IO.inspect(label: "out node")
-        # check neighbours that may have now less than k degrees
-        nodes =
-          Map.get(step_graph, value, [])
-          |> IO.inspect(label: "linked nodes")
+  defp perform_reduction(graph, queue, k, iter) do
+    case Queue.dequeue(queue) do
+      {:ok, node, queue} ->
+        graph = graph |> Graph.delete(node)
+        queue = queue |> update_queue(graph, k)
 
-        {new_graph, new_queue} =
-          case nodes do
-            # the node is alone, do nothing
-            nil ->
-              {step_graph, res_q}
+        IO.puts("- Graph state -")
+        graph |> Grid.from_graph("@") |> Grid.display(Queue.to_list(queue))
+        IO.puts("\n")
 
-            # node has neighbours still, we need to update them
-            _ ->
-              nodes
-              |> Enum.reduce({step_graph, res_q}, fn node, {g, qq} ->
-                IO.puts("  node: #{inspect(node)}, #{get_degree(g, node)}")
+        if iter < 10 do
+          perform_reduction(graph, queue, k, iter + 1)
+        else
+          graph
+        end
 
-                # remove the dequeued node from the node neighbours
-                new_node_neighbours = MapSet.delete(Map.get(g, node), value)
-
-                n_q =
-                  if get_degree(g, node) < k do
-                    # enqueue the node since it has a degree less than k
-                    IO.puts("    enqueue node")
-                    :queue.in(node, qq)
-                  else
-                    qq
-                  end
-
-                # update the graph with the new node's neighbours
-                n_g =
-                  Map.put(g, node, new_node_neighbours)
-                  |> IO.inspect(label: "    new graph")
-
-                {n_g, n_q}
-              end)
-          end
-
-        # finish by removing the dequeue node from the graph
-        next_iter_graph = Map.delete(new_graph, value)
-
-        perform_reduction(next_iter_graph, new_queue, k)
-
-      {:empty, _q} ->
-        step_graph
+      :empty ->
+        graph
     end
   end
 
-  defp get_degree(graph, node) do
-    with true <- Map.has_key?(graph, node), neighbours <- Map.get(graph, node) do
-      MapSet.size(neighbours)
-    end
+  defp update_queue(queue, graph, k) do
+    graph
+    |> Enum.reduce(queue, fn
+      {node, neighbours}, q ->
+        if MapSet.size(neighbours) < k do
+          Queue.enqueue(q, node)
+        else
+          q
+        end
+    end)
+  end
+
+  defp get_k_from_options(opts) do
+    Keyword.get(opts, :k, 4)
   end
 end

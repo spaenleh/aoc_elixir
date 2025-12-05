@@ -44,11 +44,12 @@ defmodule AocElixir.Solutions.Y25.Day04 do
       |> KCore.perform()
 
     initial_nodes - final_nodes
-    # |> KCore.adjacency_list("@")
-    # |> KCore.reduce_to(k: 4)
-    # |> Grid.from_adjacency("@", width: 9, height: 9)
-    # |> Grid.display()
+  end
 
-    # |> map_size()
+  def k_core(grid) do
+    grid
+    |> KCore.adjacency_list("@")
+    |> KCore.reduce(k: 4)
+    |> map_size()
   end
 end
