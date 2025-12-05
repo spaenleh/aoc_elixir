@@ -36,7 +36,6 @@ defmodule AocElixir.Solutions.Y25.Day05Test do
     assert {:ok, @part_one_solution} == AoC.run(2025, 5, :part_one)
   end
 
-  @tag :only
   test "part two example" do
     input = ~S"""
     3-5

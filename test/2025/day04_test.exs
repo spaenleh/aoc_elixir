@@ -35,7 +35,6 @@ defmodule AocElixir.Solutions.Y25.Day04Test do
     assert {:ok, @part_one_solution} == AoC.run(2025, 4, :part_one)
   end
 
-  @tag :only
   test "part two example" do
     input = ~S"""
     ..@@.@@@@.
@@ -60,6 +59,33 @@ defmodule AocElixir.Solutions.Y25.Day04Test do
 
     assert 43 == solve(input, :part_two)
   end
+
+  # @tag :only
+  # test "part two with k-core" do
+  #   # input = ~S"""
+  #   # ..@@.@@@@.
+  #   # @@@.@.@.@@
+  #   # @@@@@.@.@@
+  #   # @.@@@@..@.
+  #   # @@.@@@@.@@
+  #   # .@@@@@@@.@
+  #   # .@.@.@.@@@
+  #   # @.@@@.@@@@
+  #   # .@@@@@@@@.
+  #   # @.@.@@@.@.
+  #   # """
+  #   input = ~S"""
+  #   @.@@@@..@.
+  #   @@.@@@@.@@
+  #   .@@@@@@@.@
+  #   .@.@.@.@@@
+  #   @.@@@.@@@@
+  #   .@@@@@@@@.
+  #   @.@.@@@.@.
+  #   """
+  #
+  #   assert 43 == solve(input, :k_core)
+  # end
 
   @part_two_solution 9609
   @tag :solution

@@ -36,19 +36,20 @@ defmodule AocElixir.Solutions.Y25.Day04 do
     Enum.count(list, matcher) < 4
   end
 
-  def part_two(problem) do
-    initial_nodes = problem |> KCore.adjacency_list("@") |> map_size()
+  def part_two(grid) do
+    initial_nodes = grid |> Grid.to_graph("@") |> map_size()
 
     final_nodes =
-      problem
+      grid
       |> KCore.perform()
 
     initial_nodes - final_nodes
-    # |> KCore.adjacency_list("@")
-    # |> KCore.reduce_to(k: 4)
-    # |> Grid.from_adjacency("@", width: 9, height: 9)
-    # |> Grid.display()
+  end
 
-    # |> map_size()
+  def k_core(grid) do
+    grid
+    |> Grid.to_graph("@")
+    |> KCore.reduce(k: 4)
+    |> map_size()
   end
 end
