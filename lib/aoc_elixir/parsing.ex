@@ -10,4 +10,9 @@ defmodule AocElixir.Parsing do
       nbr
     end)
   end
+
+  def whitespace(""), do: true
+  def whitespace(" "), do: true
+  def whitespace("\n"), do: true
+  def whitespace(_), do: false
 end
