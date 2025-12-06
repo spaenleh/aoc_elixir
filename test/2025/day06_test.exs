@@ -24,12 +24,11 @@ defmodule AocElixir.Solutions.Y25.Day06Test do
   end
 
   @part_one_solution 6_891_729_672_676
-  @tag :solutin
+  @tag :solution
   test "part one solution" do
     assert {:ok, @part_one_solution} == AoC.run(2025, 6, :part_one)
   end
 
-  @tag :only
   test "part two example" do
     input = ~S"""
     32 123  51 64 
@@ -50,10 +49,9 @@ defmodule AocElixir.Solutions.Y25.Day06Test do
     assert 3_263_827 == solve(input, :part_two)
   end
 
-  # 6641758960 too low
-  # @part_two_solution CHANGE_ME
-  #
-  # test "part two solution" do
-  #   assert {:ok, @part_two_solution} == AoC.run(2025, 6, :part_two)
-  # end
+  @part_two_solution 9_770_311_947_567
+  @tag :solution
+  test "part two solution" do
+    assert {:ok, @part_two_solution} == AoC.run(2025, 6, :part_two)
+  end
 end
