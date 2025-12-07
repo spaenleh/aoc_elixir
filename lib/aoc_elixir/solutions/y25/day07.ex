@@ -20,11 +20,7 @@ defmodule AocElixir.Solutions.Y25.Day07 do
 
   def process_beam(line, {positions, _num_splits}) do
     spliter_positions =
-      line
-      |> String.split("")
-      |> Enum.with_index()
-      |> Enum.filter(fn {v, _idx} -> v == "^" end)
-      |> Enum.map(&elem(&1, 1))
+      get_splitter_positions(line)
 
     splitting =
       MapSet.intersection(MapSet.new(spliter_positions), MapSet.new(positions))
@@ -44,30 +40,12 @@ defmodule AocElixir.Solutions.Y25.Day07 do
     {MapSet.to_list(new_positions), MapSet.size(splitting)}
   end
 
-  def process_timelines(line, timelines) do
-    spliter_positions =
-      line
-      |> String.split("")
-      |> Enum.with_index()
-      |> Enum.filter(fn {v, _idx} -> v == "^" end)
-      |> Enum.map(&elem(&1, 1))
-
-    beam_positions =
-      Map.keys(timelines)
-
-    affected =
-      spliter_positions
-      |> Enum.filter(fn pos -> Enum.member?(beam_positions, pos) end)
-
-    affected
-    |> Enum.reduce(timelines, fn pos, acc ->
-      val_at_pos =
-        Map.get(acc, pos, 0)
-
-      Map.update(acc, pos - 1, 1, fn v -> v + val_at_pos end)
-      |> Map.update(pos + 1, 1, fn v -> v + val_at_pos end)
-      |> Map.put(pos, 0)
-    end)
+  defp get_splitter_positions(line) do
+    line
+    |> String.split("")
+    |> Enum.with_index()
+    |> Enum.filter(fn {v, _idx} -> v == "^" end)
+    |> Enum.map(&elem(&1, 1))
   end
 
   def part_two({lines, positions}) do
@@ -79,5 +57,20 @@ defmodule AocElixir.Solutions.Y25.Day07 do
     |> Enum.reduce(positions, &process_timelines/2)
     |> Map.values()
     |> Enum.sum()
+  end
+
+  def process_timelines(line, timelines) do
+    spliter_positions =
+      get_splitter_positions(line)
+
+    spliter_positions
+    |> Enum.reduce(timelines, fn pos, acc ->
+      val_at_pos =
+        Map.get(acc, pos, 0)
+
+      Map.update(acc, pos - 1, 1, fn v -> v + val_at_pos end)
+      |> Map.update(pos + 1, 1, fn v -> v + val_at_pos end)
+      |> Map.put(pos, 0)
+    end)
   end
 end
