@@ -10,7 +10,8 @@ defmodule AocElixir.Solutions.Y25.Day07 do
 
   def part_one({lines, positions}) do
     # remove every other line
-    splitter_lines = for {val, idx} <- lines |> Enum.with_index(), rem(idx, 2) == 1, do: val
+    splitter_lines =
+      lines |> Enum.drop(1) |> Enum.take_every(2)
 
     splitter_lines
     |> Enum.scan({positions, 0}, &process_beam/2)
