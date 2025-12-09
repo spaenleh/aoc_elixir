@@ -10,6 +10,7 @@ defmodule AocElixir.Solutions.Y25.Day09 do
     # {[min_x, _], [max_x, _]} =
     #   problem
     #   |> Enum.min_max_by(fn v -> Enum.at(v, 0) end)
+    #
     # {[_, min_y], [_, max_y]} =
     #   problem
     #   |> Enum.min_max_by(fn v -> Enum.at(v, 1) end)

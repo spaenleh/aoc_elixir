@@ -94,6 +94,16 @@ For this I first sorted the ranges by their start and end values, so they are gu
 
 I am very happy that my approach for the second part runs in under 1ms (736us).
 
+### 2025 Day 09
+
+Today is not quite a grid, but actually it is. Haha, got you !
+
+We need to help the elves count the number of red tiles that they can replace. The tiles they can replace need to be between the red tiles in the input. We have the coordinates and need to find the largest area of tiles that can be replaced.
+
+Without much effort this can be done with computing all the combinations of points and then taking the largest area.
+
+Not sure how this would be done more efficiently, I tried something where I would select only the edges but while it did work on the test input it did not work on the final input. I did not investigate further why.
+
 ## 2024
 
 ### 2024 Day 01
