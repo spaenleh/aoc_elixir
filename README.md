@@ -104,6 +104,20 @@ Without much effort this can be done with computing all the combinations of poin
 
 Not sure how this would be done more efficiently, I tried something where I would select only the edges but while it did work on the test input it did not work on the final input. I did not investigate further why.
 
+### 2025 Day 11
+
+Today is a graph problem.
+I prepared by reading about graph traversal methods. So I learned DFS. I liked that it used the call stack to implement the "stack" in the algo.
+
+Part 1 was solved easily using DFS and recursive methods.
+
+For part 2 I have a moment of panic when it did not finish in a few seconds. I just taught "I am fu\*\*ed".
+So I tried to find some help on how I could do this in a less naive way.
+I looked like the input has a shape that made the search from `svr` node to `out` completely explode.
+I read somewhere that it could be solved with memoization. I was not sure how to do that. In the end I used an :ets table to store the number of paths to target node from any node v.
+
+It also turns out that the input does not contain any cycles. It just likes to exponentially explode, this is why the memoization helps.
+
 ## 2024
 
 ### 2024 Day 01
